@@ -85,7 +85,7 @@ Backend deploys to Render, Railway, Fly.io, or a VPS. Set the variables from `se
 ### Render Backend
 
 - Root directory: `server`
-- Build command: `npm ci && npm run build`
+- Build command: `npm ci --include=dev && npm run build`
 - Start command: `npm start`
 - Health check path: `/health`
 - Set `CLIENT_URL` and `CLIENT_URLS` to your Vercel production URL.
