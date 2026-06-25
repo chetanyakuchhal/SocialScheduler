@@ -13,6 +13,7 @@ export const env = {
     jwtSecret: optionalEnv("JWT_SECRET", "dev_only_change_me"),
     jwtExpiresIn: optionalEnv("JWT_EXPIRES_IN", "7d"),
     clientUrl: optionalEnv("CLIENT_URL", "http://localhost:5173"),
+    clientUrls: optionalEnv("CLIENT_URLS"),
     geminiApiKey: optionalEnv("GEMINI_API_KEY"),
     imageProvider: optionalEnv("IMAGE_PROVIDER", "pollinations"),
     huggingFaceToken: optionalEnv("HUGGINGFACE_API_TOKEN"),
@@ -38,4 +39,12 @@ export const validateEnv = () => {
             throw new Error("JWT_SECRET must be changed in production");
         }
     }
+};
+
+export const allowedOrigins = () => {
+    const configured = env.clientUrls || env.clientUrl;
+    return configured
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
 };

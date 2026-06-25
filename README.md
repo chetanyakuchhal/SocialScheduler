@@ -75,6 +75,21 @@ Frontend deploys cleanly to Vercel or Netlify. Set `VITE_API_BASE_URL` to the ba
 
 Backend deploys to Render, Railway, Fly.io, or a VPS. Set the variables from `server/.env.example`, run `npm run build`, then `npm start`.
 
+### Vercel Frontend
+
+- Root directory: `client`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variable: `VITE_API_BASE_URL=https://your-render-service.onrender.com`
+
+### Render Backend
+
+- Root directory: `server`
+- Build command: `npm ci && npm run build`
+- Start command: `npm start`
+- Health check path: `/health`
+- Set `CLIENT_URL` and `CLIENT_URLS` to your Vercel production URL.
+
 Docker is also included:
 
 ```bash

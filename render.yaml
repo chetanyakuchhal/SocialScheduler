@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: social-scheduler-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: IMAGE_PROVIDER
+        value: pollinations
+      - key: POLLINATIONS_BASE_URL
+        value: https://image.pollinations.ai
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: CLIENT_URLS
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ZERNIO_API_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false

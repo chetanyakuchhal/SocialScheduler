@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from 'express';
 import cors from "cors";
 import connectDB from "./config/db.js";
-import { env, validateEnv } from "./config/env.js";
+import { allowedOrigins, env, validateEnv } from "./config/env.js";
 import authRouter from "./routes/authRoutes.js";
 import socialAuthRouter from "./routes/socialAuthRoutes.js";
 import accountRouter from "./routes/accountRoutes.js";
@@ -16,11 +16,27 @@ validateEnv();
 await connectDB();
 // Middleware
 app.use(securityHeaders);
-app.use(rateLimit());
-app.use(cors({
-    origin: env.nodeEnv === "production" ? env.clientUrl : true,
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        const origins = allowedOrigins();
+        const isLocalDev = env.nodeEnv !== "production" && /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+        if (isLocalDev || origins.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+        callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
     credentials: true,
-}));
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+app.use(rateLimit(300));
 app.use(express.json({ limit: "1mb" }));
 const port = env.port;
 app.get('/', (_req, res) => {

@@ -12,6 +12,11 @@ export const securityHeaders = (_req: Request, res: Response, next: NextFunction
 
 export const rateLimit = (limit = 120, windowMs = 15 * 60 * 1000) => {
     return (req: Request, res: Response, next: NextFunction) => {
+        if (req.method === "OPTIONS" || req.path === "/health") {
+            next();
+            return;
+        }
+
         const key = req.ip || req.socket.remoteAddress || "unknown";
         const now = Date.now();
         const bucket = buckets.get(key);
